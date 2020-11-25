@@ -77,8 +77,9 @@ void supprimer_un_contact_dans_rep(Repertoire *rep, int indice) {
 	// compléter code ici pour tableau
 	if (rep->nb_elts >= 1)		/* s'il y a au moins un element ds le tableau */
 	{						/* et que l'indice pointe a l'interieur */
-		
-
+		for (int i = indice; i < rep->nb_elts; i++) {
+			*(rep->tab + i) = *(rep->tab + i + 1);
+		}
 
 
 
