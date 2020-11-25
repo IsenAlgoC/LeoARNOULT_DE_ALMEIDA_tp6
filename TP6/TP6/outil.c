@@ -77,11 +77,10 @@ void supprimer_un_contact_dans_rep(Repertoire *rep, int indice) {
 	// compléter code ici pour tableau
 	if (rep->nb_elts >= 1)		/* s'il y a au moins un element ds le tableau */
 	{						/* et que l'indice pointe a l'interieur */
+
 		for (int i = indice; i < rep->nb_elts; i++) {
 			*(rep->tab + i) = *(rep->tab + i + 1);
 		}
-
-
 
 
 		rep->nb_elts -= 1;		/* ds ts les cas, il y a un element en moins */
@@ -119,7 +118,7 @@ void supprimer_un_contact_dans_rep(Repertoire *rep, int indice) {
   /**********************************************************************/
 void affichage_enreg(Enregistrement enr)
 {
-	// code à compléter ici
+	printf("%s, %s				%s", enr.nom, enr.prenom, enr.tel);
 
 
 } /* fin affichage_enreg */
@@ -132,10 +131,9 @@ void affichage_enreg_frmt(Enregistrement enr)
 {
 	// code à compléter ici
 	// comme fonction affichage_enreg, mais avec présentation alignées des infos
-	
+	printf("|%-20s      |%-20s      |%-30s\n", enr.nom, enr.prenom, enr.tel);
 
 } /* fin affichage_enreg */
-
 
   /**********************************************************************/
   /* test si dans l'ordre alphabetique, un enregistrement est apres     */
