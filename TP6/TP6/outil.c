@@ -167,18 +167,14 @@ void trier(Repertoire *rep)
 #ifdef IMPL_TAB
 	for (int i = 0; i < rep->nb_elts - 1; i++) {
 		if (est_sup(*(rep->tab + i), *(rep->tab + i + 1)) == false) {
-			Enregistrement transit;
+			Enregistrement tmp;
 			int j = i, stop = 0;
 			do {
-				transit = *(rep->tab + j);
+				tmp = *(rep->tab + j);
 				*(rep->tab + j) = *(rep->tab + j + 1);
-				*(rep->tab + j + 1) = transit; 
+				*(rep->tab + j + 1) = tmp; 
 				j--;
-				if (est_sup(*(rep->tab + j), *(rep->tab + j + 1)) == true) {
-					stop = 1;				                                    									
-				}
-
-			} while (stop = 0);
+			} while ((est_sup(*(rep->tab + j), *(rep->tab + j + 1))));
 		}
 	}
 
