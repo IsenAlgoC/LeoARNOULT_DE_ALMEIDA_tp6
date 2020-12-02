@@ -140,17 +140,17 @@ void affichage_enreg_frmt(Enregistrement enr)
   /**********************************************************************/
 bool est_sup(Enregistrement enr1, Enregistrement enr2)
 {
-	if (strcmp(enr1.nom, enr2.nom) < 0) { // si le nom1 est supérieur à enr2 dans l'alphabet
+	if (_strcmpi(enr1.nom, enr2.nom) < 0) { // si le nom1 est supérieur à enr2 dans l'alphabet
 		return(true);
 	}
-	else if (strcmp(enr1.nom, enr2.nom) > 0) {
+	else if (_strcmpi(enr1.nom, enr2.nom) > 0) {
 		return(false);
 	}
 	else {
-		if (strcmp(enr1.prenom, enr2.prenom) < 0) {
+		if (_strcmpi(enr1.prenom, enr2.prenom) < 0) {
 			return(true);
 		}
-		else if (strcmp(enr1.prenom, enr2.prenom) > 0) {
+		else if (_strcmpi(enr1.prenom, enr2.prenom) > 0) {
 			return(false);
 		}
 		else { return false; } // en cas de nom et prenom == on retourne false de façon arbitraire
@@ -165,16 +165,21 @@ void trier(Repertoire *rep)
 {
 
 #ifdef IMPL_TAB
-	for (int i = 0; i < rep->nb_elts - 1; i++) {
-		if (est_sup(*(rep->tab + i), *(rep->tab + i + 1)) == false) {
-			Enregistrement tmp;
-			int j = i, stop = 0;
-			do {
+
+	int boucle = 1;
+	while (boucle)
+	{
+		boucle = 0;
+		for (int j = 0; j < rep->nb_elts - 1; j++)
+		{
+			if (!est_sup(*(rep->tab + j), *(rep->tab + j + 1)))
+			{
+				Enregistrement tmp;
 				tmp = *(rep->tab + j);
 				*(rep->tab + j) = *(rep->tab + j + 1);
-				*(rep->tab + j + 1) = tmp; 
-				j--;
-			} while ((est_sup(*(rep->tab + j), *(rep->tab + j + 1))));
+				*(rep->tab + j + 1) = tmp;
+				boucle = 1;
+			}
 		}
 	}
 
