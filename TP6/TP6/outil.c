@@ -174,8 +174,7 @@ void trier(Repertoire *rep)
 		{
 			if (!est_sup(*(rep->tab + j), *(rep->tab + j + 1)))
 			{
-				Enregistrement tmp;
-				tmp = *(rep->tab + j);
+				Enregistrement tmp = *(rep->tab + j);
 				*(rep->tab + j) = *(rep->tab + j + 1);
 				*(rep->tab + j + 1) = tmp;
 				boucle = 1;
