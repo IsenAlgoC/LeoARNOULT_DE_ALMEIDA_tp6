@@ -129,9 +129,8 @@ void affichage_enreg(Enregistrement enr)
   /**********************************************************************/
 void affichage_enreg_frmt(Enregistrement enr)
 {
-	// code à compléter ici
-	// comme fonction affichage_enreg, mais avec présentation alignées des infos
-	printf("|%-20s      |%-20s      |%-30s\n", enr.nom, enr.prenom, enr.tel);
+
+	printf("|%-30s      |%-30s      |%-20s\n", enr.nom, enr.prenom, enr.tel);
 
 } /* fin affichage_enreg */
 
@@ -141,11 +140,21 @@ void affichage_enreg_frmt(Enregistrement enr)
   /**********************************************************************/
 bool est_sup(Enregistrement enr1, Enregistrement enr2)
 {
-	// code à compléter ici
-	
-
-	return(false);
-
+	if (strcmp(enr1.nom, enr2.nom) < 0) { // si le nom1 est supérieur à enr2 dans l'alphabet
+		return(true);
+	}
+	else if (strcmp(enr1.nom, enr2.nom) > 0) {
+		return(false);
+	}
+	else {
+		if (strcmp(enr1.prenom, enr2.prenom) < 0) {
+			return(true);
+		}
+		else if (strcmp(enr1.prenom, enr2.prenom) > 0) {
+			return(false);
+		}
+		else { return false; } // en cas de nom et prenom == on retourne false de façon arbitraire
+	}
 }
  
 /*********************************************************************/
@@ -156,10 +165,24 @@ void trier(Repertoire *rep)
 {
 
 #ifdef IMPL_TAB
-	// ajouter code ici pour tableau
+	for (int i = 0; i < rep->nb_elts - 1; i++) {
+		if (est_sup(*(rep->tab + i), *(rep->tab + i + 1)) == false) {
+			Enregistrement transit;
+			int j = i, stop = 0;
+			do {
+				transit = *(rep->tab + j);
+				*(rep->tab + j) = *(rep->tab + j + 1);
+				*(rep->tab + j + 1) = transit; 
+				j--;
+				if (est_sup(*(rep->tab + j), *(rep->tab + j + 1)) == true) {
+					stop = 1;				                                    									
+				}
+
+			} while (stop = 0);
+		}
+	}
+
 	
-
-
 	
 #else
 #ifdef IMPL_LIST
