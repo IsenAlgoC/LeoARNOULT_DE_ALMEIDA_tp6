@@ -216,7 +216,15 @@ int rechercher_nom(Repertoire *rep, char nom[], int ind)
 
 
 #ifdef IMPL_TAB
-							// ajouter code ici pour tableau
+	ind_fin = rep->nb_elts;
+	strcpy_s(tmp_nom, _countof(tmp_nom), nom); // on copie la chaine de caractére de nom vers tmp_nom
+	while ((!trouve) && (i < ind_fin)) {
+		strcpy_s(tmp_nom2, _countof(tmp_nom2), rep->tab[i].nom); // on met dans
+		if (_strcmpi(tmp_nom, tmp_nom2) == 0) { // si les 2 chaines de caractères avec maj son égal on change la valeur de trouve
+			trouve = true;
+		}
+		else { i++; } // si on ne trouve pas le mot et que l'on est encore <ind_fin on incrémente i et on reboucle
+	}
 	
 #else
 #ifdef IMPL_LIST
@@ -233,7 +241,14 @@ int rechercher_nom(Repertoire *rep, char nom[], int ind)
   /*********************************************************************/
 void compact(char *s)
 {
-	// compléter code ici
+	int n = strlen(s);
+	for (int i = 0; i < n; i++) { // on test chaque caractère
+		if (isdigit(s[i])==1) { //on rentre dans le if si le iéme caractère est numérique
+			for (int j = i; j < n; j++) { // on décale toutes les autres lettres
+				*(s + j) = *(s + j + 1);
+			}
+		}
+	}
 
 	return;
 }
@@ -247,8 +262,14 @@ int sauvegarder(Repertoire *rep, char nom_fichier[])
 {
 	FILE *fic_rep;					/* le fichier */
 #ifdef IMPL_TAB
-	// ajouter code ici pour tableau
-	
+	errno_t err = fopen_s(&fic_rep, nom_fichier, "w");
+	if (err != 0) {
+		return ERROR;
+	}
+	for (int i = 0; i < rep->nb_elts; i++) {
+		fprintf(fic_rep, "%s%c%s%c%s\n", rep->tab[i].nom, SEPARATEUR, rep->tab[i].prenom, SEPARATEUR, rep->tab[i].tel);
+	}
+
 #else
 #ifdef IMPL_LIST
 	// ajouter code ici pour Liste
