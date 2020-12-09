@@ -124,7 +124,7 @@ int DeleteLinkedListElem(LinkedList * list, SingleLinkedListElem * item) {
 		return(1);
 	}
 	if (item == list->head) {
-		list->head = item->next;
+		tmp = item->next;
 		list->size--;
 		free(item);
 		return(1);

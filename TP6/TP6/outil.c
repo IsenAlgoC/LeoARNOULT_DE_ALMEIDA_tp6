@@ -51,12 +51,12 @@ int ajouter_un_contact_dans_rep(Repertoire *rep, Enregistrement enr)
 
 	}
 	else {
-			//
-			// compléter code ici pour Liste
-			//
-			//
-			//
-
+		if (InsertElementAt(rep->liste, rep->liste->size, enr) != 0) {
+			rep->nb_elts += 1;
+			modif = true;
+			rep->est_trie = false;
+			return(OK);
+		}
 	}
 
 
@@ -229,7 +229,15 @@ int rechercher_nom(Repertoire *rep, char nom[], int ind)
 	
 #else
 #ifdef IMPL_LIST
-							// ajouter code ici pour Liste
+	ind_fin = rep->nb_elts;
+	strcpy_s(tmp_nom, _countof(tmp_nom), nom); // on copie la chaine de caractére de nom vers tmp_nom
+	while ((!trouve) && (i < ind_fin)) {
+		strcpy_s(tmp_nom2, _countof(tmp_nom2), GetElementAt(rep->liste,i)); // on met dans
+		if (_strcmpi(tmp_nom, tmp_nom2) == 0) { // si les 2 chaines de caractères avec maj son égal on change la valeur de trouve
+			trouve = true;
+		}
+		else { i++; } // si on ne trouve pas le mot et que l'on est encore <ind_fin on incrémente i et on reboucle
+	}						// ajouter code ici pour Liste
 	
 #endif
 #endif
@@ -281,7 +289,17 @@ int sauvegarder(Repertoire *rep, char nom_fichier[])
 	}
 #else
 #ifdef IMPL_LIST
-	// ajouter code ici pour Liste
+	err = fopen_s(&fic_rep, nom_fichier, "w");
+	if (err != 0 || fic_rep == NULL) {
+		return ERROR;
+	}
+	else {
+		for (int i = 0; i < rep->nb_elts; i++) {
+			sprintf_s(buffer, sizeof(buffer), "%s%c%s%c%s\n", GetElementAt(rep->liste, i)->pers.nom, SEPARATEUR, GetElementAt(rep->liste, i)->pers.prenom, SEPARATEUR, GetElementAt(rep->liste, i)->pers.tel);
+			fputs(buffer, fic_rep);
+		}
+		fclose(fic_rep);
+	}
 #endif
 #endif
 
