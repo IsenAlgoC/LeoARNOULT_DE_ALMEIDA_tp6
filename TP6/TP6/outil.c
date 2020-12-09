@@ -242,14 +242,17 @@ int rechercher_nom(Repertoire *rep, char nom[], int ind)
 void compact(char *s)
 {
 	int n = strlen(s);
-	for (int i = 0; i < n; i++) { // on test chaque caractère
-		if (isdigit(s[i])==1) { //on rentre dans le if si le iéme caractère est numérique
+	int i = 0;
+	while (i != n) {
+		if (isdigit(s[i]) == 0) { //on rentre dans le if si le iéme caractère est numérique
+			n = strlen(s);
 			for (int j = i; j < n; j++) { // on décale toutes les autres lettres
 				*(s + j) = *(s + j + 1);
 			}
 		}
+		else { i += 1; }
+		
 	}
-
 	return;
 }
 
