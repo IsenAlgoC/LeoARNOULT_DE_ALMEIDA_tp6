@@ -30,6 +30,7 @@ int ajouter_un_contact_dans_rep(Repertoire *rep, Enregistrement enr)
 	{	
 		*(rep->tab + rep->nb_elts ) = enr;
 		rep->nb_elts += 1;
+		modif = true;
 	}
 	else {
 		return(ERROR);
@@ -153,7 +154,7 @@ bool est_sup(Enregistrement enr1, Enregistrement enr2)
 		else if (_strcmpi(enr1.prenom, enr2.prenom) > 0) {
 			return(false);
 		}
-		else { return true; } // en cas de nom et prenom == on retourne false de façon arbitraire
+		else { return true; } // en cas de nom et prenom == on retourne true
 	}
 }
  
@@ -263,18 +264,20 @@ void compact(char *s)
 /**********************************************************************/
 int sauvegarder(Repertoire *rep, char nom_fichier[])
 {
-	FILE *fic_rep;					/* le fichier */
+	FILE *fic_rep;
+	char buffer[sizeof(Enregistrement) + 1];
+	errno_t err;
 #ifdef IMPL_TAB
-	if (fopen_s(&fic_rep, nom_fichier, "w+")) {
+	err = fopen_s(&fic_rep, nom_fichier, "w");
+	if (err != 0 || fic_rep == NULL) {
 		return ERROR;
 	}
 	else {
 		for (int i = 0; i < rep->nb_elts; i++) {
-			fprintf(&fic_rep, "%s;", rep->tab[i].nom);
-			fprintf(&fic_rep, "%s;", rep->tab[i].prenom);
-			fprintf(&fic_rep, "%s\n", rep->tab[i].tel);
+			sprintf_s(buffer, sizeof(buffer),"%s%c%s%c%s\n", rep->tab[i].nom,SEPARATEUR, rep->tab[i].prenom,SEPARATEUR, rep->tab[i].tel);
+			fputs(buffer, fic_rep);
 		}
-		fclose(&fic_rep);
+		fclose(fic_rep);
 	}
 #else
 #ifdef IMPL_LIST
