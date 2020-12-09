@@ -153,7 +153,7 @@ bool est_sup(Enregistrement enr1, Enregistrement enr2)
 		else if (_strcmpi(enr1.prenom, enr2.prenom) > 0) {
 			return(false);
 		}
-		else { return false; } // en cas de nom et prenom == on retourne false de façon arbitraire
+		else { return true; } // en cas de nom et prenom == on retourne false de façon arbitraire
 	}
 }
  
@@ -265,14 +265,17 @@ int sauvegarder(Repertoire *rep, char nom_fichier[])
 {
 	FILE *fic_rep;					/* le fichier */
 #ifdef IMPL_TAB
-	errno_t err = fopen_s(&fic_rep, nom_fichier, "w");
-	if (err != 0) {
+	if (fopen_s(&fic_rep, nom_fichier, "w+")) {
 		return ERROR;
 	}
-	for (int i = 0; i < rep->nb_elts; i++) {
-		fprintf(fic_rep, "%s%c%s%c%s\n", rep->tab[i].nom, SEPARATEUR, rep->tab[i].prenom, SEPARATEUR, rep->tab[i].tel);
+	else {
+		for (int i = 0; i < rep->nb_elts; i++) {
+			fprintf(&fic_rep, "%s;", rep->tab[i].nom);
+			fprintf(&fic_rep, "%s;", rep->tab[i].prenom);
+			fprintf(&fic_rep, "%s\n", rep->tab[i].tel);
+		}
+		fclose(&fic_rep);
 	}
-
 #else
 #ifdef IMPL_LIST
 	// ajouter code ici pour Liste
