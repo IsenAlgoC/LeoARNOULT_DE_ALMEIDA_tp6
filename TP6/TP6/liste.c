@@ -79,9 +79,9 @@ int InsertElementAt(LinkedList *Liste, int i, Enregistrement pers) {
 		if (Liste->size == 0) { // insertion en tête de l'unique élément
 			NewElement = NewLinkedListElement(pers);
 			if (NewElement != NULL) {
-				Liste->head = NewElement;
-				Liste->size = 1;
-				Liste->tail = NewElement;
+				Liste->head = NewElement; //on initialise la tête
+				Liste->size = 1; // on fixe 1 à la taille car il y a 1 élément
+				Liste->tail = NewElement; //on initialise la queue
 				return(1);
 		}
 			else {
@@ -91,9 +91,9 @@ int InsertElementAt(LinkedList *Liste, int i, Enregistrement pers) {
 		if (Liste->size <= i) { // insertion en queue
 			NewElement = NewLinkedListElement(pers);
 			if (NewElement != NULL) {
-				Liste->tail->next = NewElement;
-				Liste->tail = NewElement;
-				Liste->size += 1;
+				Liste->tail->next = NewElement; // on donne à la queue le pointeur vers notre element
+				Liste->tail = NewElement; //on fixe notre pointeur à la queue de notre liste
+				Liste->size += 1; // comme on ajoute un element, on augmente le compteur de 1
 				return(1);
 			}
 			else {
@@ -117,31 +117,32 @@ int DeleteLinkedListElem(LinkedList * list, SingleLinkedListElem * item) {
 	SingleLinkedListElem* tmp = list->head;
 	SingleLinkedListElem* previous = NULL;
 	if ((item = list->head) && (item == list->tail)) {
-		list->head = NULL;
+		list->head = NULL; // si il n'y a qu'un seul maillon on met juste un pointeur nul en tête et queue
 		list->tail = NULL;
 		list->size = 0;
-		free(item);
+		free(item); // on libere le pointeur
 		return(1);
 	}
 	if (item == list->head) {
-		tmp = item->next;
-		list->size--;
-		free(item);
+		tmp = item->next; // si le maillon est en tête on change le maillon de tête au suivant
+		list->size--; // on décrémente de 1 le compteur
+		free(item); // on libére le pointeur
 		return(1);
 	}
 	while ((tmp != NULL) && (tmp != item)) {
-		previous = tmp;
+		previous = tmp; // on fait une boucle pour atteindre le maillon
 		tmp = tmp->next;
 	}
 	if ((previous != NULL) && (tmp == item) && (tmp->next == NULL)) {
-		list->tail = previous;
-		previous->next = NULL;
+		list->tail = previous; // on change le pointeur de queue par l'avant dernier pointeur
+		previous->next = NULL; //si le maillon est en queue on met un pointeur NULL dans le pointeur suivant du maillon précédent
 		list->size--;
 		free(item);
 		return(1);
 	}
 	if ((previous != NULL) && (tmp == item) && (tmp->next != NULL)) {
-		previous->next = item->next;
+		previous->next = item->next; //si le maillon n'a pas une position spécial, on donne la valeur du pointeur du maillon suivant
+		// au pointeur next du maillon précédent
 		list->size--;
 		free(item);
 		return(1);

@@ -23,14 +23,13 @@ extern bool modif;
 int ajouter_un_contact_dans_rep(Repertoire *rep, Enregistrement enr)
 {
 #ifdef IMPL_TAB
-	// compléter code ici pour tableau
 	int idx;
 
-	if (rep->nb_elts < MAX_ENREG)
+	if (rep->nb_elts < MAX_ENREG) //si il y a encore de la place
 	{	
-		*(rep->tab + rep->nb_elts ) = enr;
-		rep->nb_elts += 1;
-		modif = true;
+		*(rep->tab + rep->nb_elts ) = enr; // on ajoute au bout de la liste le contact
+		rep->nb_elts += 1; // on augmente le nb d'élément
+		modif = true; // pour déclencher la sauvegarde
 	}
 	else {
 		return(ERROR);
@@ -41,20 +40,20 @@ int ajouter_un_contact_dans_rep(Repertoire *rep, Enregistrement enr)
 #ifdef IMPL_LIST
 
 	bool inserted = false;
-	if (rep->nb_elts == 0) {
-		if (InsertElementAt(rep->liste, rep->liste->size, enr) != 0) {
-			rep->nb_elts += 1;
-			modif = true;
-			rep->est_trie = true;
+	if (rep->nb_elts == 0) { // si c'est le premier contact
+		if (InsertElementAt(rep->liste, rep->liste->size, enr) != 0) { // si pas de pb d'allocation
+			rep->nb_elts += 1;  // on augmente le nb d'élément
+			modif = true; //flag de modification
+			rep->est_trie = true; //on marque que la liste est trié comme il n'y a qu'un maillon
 			return(OK);
 		}
 
 	}
 	else {
-		if (InsertElementAt(rep->liste, rep->liste->size, enr) != 0) {
+		if (InsertElementAt(rep->liste, rep->liste->size, enr) != 0) { // si la liste a plus d'un maillon
 			rep->nb_elts += 1;
 			modif = true;
-			rep->est_trie = false;
+			rep->est_trie = false; // pour que la liste soit trier aprés
 			return(OK);
 		}
 	}
@@ -76,15 +75,15 @@ int ajouter_un_contact_dans_rep(Repertoire *rep, Enregistrement enr)
 void supprimer_un_contact_dans_rep(Repertoire *rep, int indice) {
 
 	// compléter code ici pour tableau
-	if (rep->nb_elts >= 1)		/* s'il y a au moins un element ds le tableau */
-	{						/* et que l'indice pointe a l'interieur */
+	if (rep->nb_elts >= 1)		//s'il y a au moins un element dans le tableau
+	{						
 
 		for (int i = indice; i < rep->nb_elts; i++) {
-			*(rep->tab + i) = *(rep->tab + i + 1);
+			*(rep->tab + i) = *(rep->tab + i + 1); //on décale les valeurs du tableau
 		}
 
 
-		rep->nb_elts -= 1;		/* ds ts les cas, il y a un element en moins */
+		rep->nb_elts -= 1;		//on décrémente le compteur d'élément
 		modif = true;
 	}
 
@@ -101,9 +100,9 @@ void supprimer_un_contact_dans_rep(Repertoire *rep, int indice) {
 
 	int supprimer_un_contact_dans_rep_liste(Repertoire *rep, SingleLinkedListElem *elem) {
 	
-	int ret=DeleteLinkedListElem(rep->liste, elem);
-	if (ret == 1) {
-		rep->nb_elts--;
+	int ret=DeleteLinkedListElem(rep->liste, elem); //on appelle la fonction DeleteLinkedListElem qui supprime l'element
+	if (ret == 1) { // si pas de pb
+		rep->nb_elts--; // on décrémente le nb d'élement
 		modif = true;
 	}
 
@@ -119,7 +118,7 @@ void supprimer_un_contact_dans_rep(Repertoire *rep, int indice) {
   /**********************************************************************/
 void affichage_enreg(Enregistrement enr)
 {
-	printf("%s, %s				%s", enr.nom, enr.prenom, enr.tel);
+	printf("%s, %s				%s", enr.nom, enr.prenom, enr.tel); //simple print des elements
 
 
 } /* fin affichage_enreg */
@@ -131,8 +130,8 @@ void affichage_enreg(Enregistrement enr)
 void affichage_enreg_frmt(Enregistrement enr)
 {
 
-	printf("|%-30s      |%-30s      |%-20s\n", enr.nom, enr.prenom, enr.tel);
-
+	printf("|%-30s      |%-30s      |%-20s\n", enr.nom, enr.prenom, enr.tel); // %-30s permet de complété par un espace 
+	//si pour que la chaine fasse toujours la même taille : ici 30
 } /* fin affichage_enreg */
 
   /**********************************************************************/
@@ -168,15 +167,15 @@ void trier(Repertoire *rep)
 #ifdef IMPL_TAB
 
 	int boucle = 1;
-	while (boucle)
+	while (boucle) //bouche jusqu'à ce que ça soit trier
 	{
 		boucle = 0;
-		for (int j = 0; j < rep->nb_elts - 1; j++)
+		for (int j = 0; j < rep->nb_elts - 1; j++) //on parcourt la liste
 		{
-			if (!est_sup(*(rep->tab + j), *(rep->tab + j + 1)))
+			if (!est_sup(*(rep->tab + j), *(rep->tab + j + 1))) // si un mot est supérieur à une lettre est sup à une autre
 			{
 				Enregistrement tmp = *(rep->tab + j);
-				*(rep->tab + j) = *(rep->tab + j + 1);
+				*(rep->tab + j) = *(rep->tab + j + 1); // on décale la liste
 				*(rep->tab + j + 1) = tmp;
 				boucle = 1;
 			}
@@ -232,7 +231,7 @@ int rechercher_nom(Repertoire *rep, char nom[], int ind)
 	ind_fin = rep->nb_elts;
 	strcpy_s(tmp_nom, _countof(tmp_nom), nom); // on copie la chaine de caractére de nom vers tmp_nom
 	while ((!trouve) && (i < ind_fin)) {
-		strcpy_s(tmp_nom2, _countof(tmp_nom2), GetElementAt(rep->liste,i)); // on met dans
+		strcpy_s(tmp_nom2, _countof(tmp_nom2), GetElementAt(rep->liste,i)->pers.nom); 
 		if (_strcmpi(tmp_nom, tmp_nom2) == 0) { // si les 2 chaines de caractères avec maj son égal on change la valeur de trouve
 			trouve = true;
 		}
@@ -276,16 +275,17 @@ int sauvegarder(Repertoire *rep, char nom_fichier[])
 	char buffer[sizeof(Enregistrement) + 1];
 	errno_t err;
 #ifdef IMPL_TAB
-	err = fopen_s(&fic_rep, nom_fichier, "w");
-	if (err != 0 || fic_rep == NULL) {
+	err = fopen_s(&fic_rep, nom_fichier, "w"); // on ouvre le fichier
+	if (err != 0 || fic_rep == NULL) { // en cas de pb
 		return ERROR;
 	}
 	else {
 		for (int i = 0; i < rep->nb_elts; i++) {
 			sprintf_s(buffer, sizeof(buffer),"%s%c%s%c%s\n", rep->tab[i].nom,SEPARATEUR, rep->tab[i].prenom,SEPARATEUR, rep->tab[i].tel);
-			fputs(buffer, fic_rep);
+			// on crée un buffer qui va ajouter tous les elements dans une chaine de caractére
+			fputs(buffer, fic_rep); // on ajoute la ligne au fichier
 		}
-		fclose(fic_rep);
+		fclose(fic_rep); // on ferme le fichier
 	}
 #else
 #ifdef IMPL_LIST
@@ -296,7 +296,8 @@ int sauvegarder(Repertoire *rep, char nom_fichier[])
 	else {
 		for (int i = 0; i < rep->nb_elts; i++) {
 			sprintf_s(buffer, sizeof(buffer), "%s%c%s%c%s\n", GetElementAt(rep->liste, i)->pers.nom, SEPARATEUR, GetElementAt(rep->liste, i)->pers.prenom, SEPARATEUR, GetElementAt(rep->liste, i)->pers.tel);
-			fputs(buffer, fic_rep);
+			// on crée un buffer qui va ajouter tous les elements dans une chaine de caractére
+			fputs(buffer, fic_rep); // on ajoute la ligne au fichier
 		}
 		fclose(fic_rep);
 	}
@@ -355,7 +356,21 @@ int charger(Repertoire *rep, char nom_fichier[])
 				}
 #else
 #ifdef IMPL_LIST
-														// ajouter code implemention liste
+				Enregistrement enr;
+				if (lire_champ_suivant(buffer, &idx, enr.nom, MAX_NOM, SEPARATEUR) == OK)
+				{
+					idx++;							/* on saute le separateur */
+					if (lire_champ_suivant(buffer, &idx, enr.prenom, MAX_NOM, SEPARATEUR) == OK)
+					{
+						idx++;
+						if (lire_champ_suivant(buffer, &idx, enr.tel, MAX_TEL, SEPARATEUR) == OK) {
+							InsertElementAt(rep->liste, rep->liste->size, enr); // on ajoute l'element dans la liste chainée
+
+							num_rec++;
+						}		/* element à priori correct, on le comptabilise */
+
+					}
+				}
 #endif
 #endif
 
